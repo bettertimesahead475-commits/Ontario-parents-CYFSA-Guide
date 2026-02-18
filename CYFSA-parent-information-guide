@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ontario's Rescue Guide for Parents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { 
+            Upload, FileText, AlertCircle, CheckCircle, Download, Lock, 
+            CreditCard, Mail, Phone, User, Menu, X, Scale, FileCheck,
+            Brain, Shield, Clock, TrendingUp
+        } = lucide;
+
+        // Main App Component
+        function App() {
+            const [currentPage, setCurrentPage] = useState('home');
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+            const pages = {
+                home: <HomePage setPage={setCurrentPage} />,
+                pricing: <PricingPage setPage={setCurrentPage} />,
+                analysis: <AnalysisPage />,
+                about: <AboutPage />
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    <Navigation 
+                        currentPage={currentPage} 
+                        setPage={setCurrentPage}
+                        mobileMenuOpen={mobileMenuOpen}
+                        setMobileMenuOpen={setMobileMenuOpen}
+                    />
+                    {pages[currentPage]}
+                    <Footer setPage={setCurrentPage} />
+                </div>
+            );
+        }
+
+        // Navigation Component
+        function Navigation({ currentPage, setPage, mobileMenuOpen, setMobileMenuOpen }) {
+            const navItems = [
+                { id: 'home', label: 'Home' },
+                { id: 'about', label: 'About' },
+                { id: 'analysis', label: 'AI Analysis' },
+                { id: 'pricing', label: 'Pricing' }
+            ];
+
+            return (
+                <nav className="bg-white shadow-lg sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-16">
+                            <div className="flex items-center cursor-pointer" onClick={() => setPage('home')}>
+                                <Scale className="h-8 w-8 text-blue-600" />
+                                <span className="ml-2 text-xl font-bold text-gray-900">Ontario's Rescue Guide</span>
+                            </div>
+                            
+                            {/* Desktop Navigation */}
+                            <div className="hidden md:flex space-x-8">
+                                {navItems.map(item => (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => setPage(item.id)}
+                                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                                            currentPage === item.id
+                                                ? 'text-blue-600 bg-blue-50'
+                                                : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Mobile menu button */}
+                            <button
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100"
+                            >
+                                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </button>
+                        </div>
+
+                        {/* Mobile Navigation */}
+                        {mobileMenuOpen && (
+                            <div className="md:hidden py-4 space-y-2">
+                                {navItems.map(item => (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => {
+                                            setPage(item.id);
+                                            setMobileMenuOpen(false);
+                                        }}
+                                        className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${
+                                            currentPage === item.id
+                                                ? 'text-blue-600 bg-blue-50'
+                                                : 'text-gray-700 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </nav>
+            );
+        }
+
+        // Home Page
+        function HomePage({ setPage }) {
+            return (
+                <div>
+                    {/* Hero Section */}
+                    <div className="animated-gradient text-white py-20">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                                Defend Your Rights with AI-Powered Legal Analysis
+                            </h1>
+                            <p className="text-xl md:text-2xl mb-8 text-blue-100">
+                                Expert guidance for Ontario parents navigating the child protection system
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button
+                                    onClick={() => setPage('analysis')}
+                                    className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-all shadow-lg"
+                                >
+                                    Start AI Analysis
+                                </button>
+                                <button
+                                    onClick={() => setPage('pricing')}
+                                    className="bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-800 transition-all shadow-lg"
+                                >
+                                    View Pricing
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Features Section */}
+                    <div className="py-20 bg-white">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
+                                How We Help You
+                            </h2>
+                            <div className="grid md:grid-cols-3 gap-8">
+                                <FeatureCard
+                                    icon={<Brain className="w-12 h-12 text-blue-600" />}
+                                    title="AI Document Analysis"
+                                    description="Upload your case documents and get instant AI-powered analysis identifying violations and procedural errors."
+                                />
+                                <FeatureCard
+                                    icon={<FileCheck className="w-12 h-12 text-blue-600" />}
+                                    title="Professional Reports"
+                                    description="Receive detailed PDF reports with timelines, violations, and actionable recommendations."
+                                />
+                                <FeatureCard
+                                    icon={<Shield className="w-12 h-12 text-blue-600" />}
+                                    title="CYFSA Compliance"
+                                    description="Cross-referenced against Ontario's Child, Youth and Family Services Act and Family Law Rules."
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Stats Section */}
+                    <div className="py-20 bg-gray-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="grid md:grid-cols-3 gap-8 text-center">
+                                <StatCard number="1000+" label="Cases Analyzed" />
+                                <StatCard number="95%" label="Violations Found" />
+                                <StatCard number="24hr" label="Average Response" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CTA Section */}
+                    <div className="py-20 bg-blue-600 text-white">
+                        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <h2 className="text-4xl font-bold mb-6">
+                                Ready to Defend Your Rights?
+                            </h2>
+                            <p className="text-xl mb-8">
+                                Get started with AI-powered legal analysis today
+                            </p>
+                            <button
+                                onClick={() => setPage('pricing')}
+                                className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-all shadow-lg"
+                            >
+                                See Pricing Options
+                            </button>
+                        </div>
+                    </div>
+
+                    <LegalResources />
+                </div>
+            );
+        }
+
+        // Pricing Page
+        function PricingPage({ setPage }) {
+            const [selectedPlan, setSelectedPlan] = useState(null);
+            const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+            const [showInstructions, setShowInstructions] = useState(false);
+            const [reference, setReference] = useState('');
+
+            const plans = [
+                {
+                    id: 'single',
+                    name: 'Single Review',
+                    price: 49.99,
+                    description: 'One-time AI analysis of your case',
+                    features: [
+                        'AI-powered document analysis',
+                        'Detailed PDF report',
+                        'Timeline extraction',
+                        'Violation identification',
+                        'Actionable recommendations'
+                    ]
+                },
+                {
+                    id: 'package',
+                    name: 'Case Package',
+                    price: 199.99,
+                    popular: true,
+                    description: 'Best value for active cases',
+                    features: [
+                        '5 compliance review credits',
+                        'All document builders',
+                        'Priority email support',
+                        'Case binder storage',
+                        'Valid for 6 months'
+                    ]
+                },
+                {
+                    id: 'monthly',
+                    name: 'Monthly Unlimited',
+                    price: 99.99,
+                    description: 'Unlimited reviews per month',
+                    features: [
+                        'Unlimited compliance reviews',
+                        'All document builders',
+                        'Priority support',
+                        'Community access',
+                        'Cancel anytime'
+                    ]
+                }
+            ];
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const ref = 'REF-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                setReference(ref);
+                setShowInstructions(true);
+            };
+
+            if (showInstructions) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4">
+                        <div className="max-w-2xl mx-auto">
+                            <div className="bg-white rounded-2xl shadow-xl p-8">
+                                <div className="text-center mb-8">
+                                    <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                                        Payment Request Created
+                                    </h2>
+                                    <p className="text-gray-600">
+                                        Follow the instructions below to complete your payment
+                                    </p>
+                                </div>
+
+                                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-6">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                                        E-Transfer Instructions
+                                    </h3>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between py-2 border-b border-blue-200">
+                                            <span className="font-medium text-gray-700">Send To:</span>
+                                            <span className="font-semibold text-gray-900">mr.pelkie@gmail.com</span>
+                                        </div>
+                                        
+                                        <div className="flex justify-between py-2 border-b border-blue-200">
+                                            <span className="font-medium text-gray-700">Amount:</span>
+                                            <span className="text-2xl font-bold text-gray-900">
+                                                ${plans.find(p => p.id === selectedPlan)?.price}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex justify-between py-2 border-b border-blue-200">
+                                            <span className="font-medium text-gray-700">Reference:</span>
+                                            <span className="font-mono font-semibold bg-yellow-100 px-3 py-1 rounded text-gray-900">
+                                                {reference}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Next Steps</h3>
+                                    <ol className="space-y-3">
+                                        <li className="flex items-start">
+                                            <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">1</span>
+                                            <span className="text-gray-700">Send e-transfer to mr.pelkie@gmail.com</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">2</span>
+                                            <span className="text-gray-700">Include reference: {reference}</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">3</span>
+                                            <span className="text-gray-700">Email confirmation will be sent within 24 hours</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">4</span>
+                                            <span className="text-gray-700">Access will be granted upon verification</span>
+                                        </li>
+                                    </ol>
+                                </div>
+
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                                    <div className="flex items-start">
+                                        <AlertCircle className="w-5 h-5 text-yellow-600 mr-3 mt-0.5 flex-shrink-0" />
+                                        <p className="text-sm text-yellow-800">
+                                            <strong>Important:</strong> Please include the reference number in your e-transfer message. 
+                                            This helps us verify your payment quickly.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowInstructions(false)}
+                                    className="w-full bg-gray-200 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-300"
+                                >
+                                    Start New Payment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-12">
+                            <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h1>
+                            <p className="text-xl text-gray-600">
+                                Get powerful AI-driven analysis to strengthen your case
+                            </p>
+                        </div>
+
+                        {/* Pricing Cards */}
+                        <div className="grid md:grid-cols-3 gap-8 mb-12">
+                            {plans.map(plan => (
+                                <div
+                                    key={plan.id}
+                                    className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transition-all ${
+                                        selectedPlan === plan.id ? 'ring-4 ring-blue-500 scale-105' : ''
+                                    } ${plan.popular ? 'border-4 border-blue-500' : 'border border-gray-200'}`}
+                                >
+                                    {plan.popular && (
+                                        <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1 text-sm font-semibold rounded-bl-lg">
+                                            BEST VALUE
+                                        </div>
+                                    )}
+                                    
+                                    <div className="p-8">
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                                        <p className="text-gray-600 mb-6">{plan.description}</p>
+                                        
+                                        <div className="mb-6">
+                                            <span className="text-5xl font-bold text-gray-900">${plan.price}</span>
+                                            {plan.id === 'monthly' && <span className="text-gray-600 ml-2">/month</span>}
+                                        </div>
+
+                                        <ul className="space-y-3 mb-8">
+                                            {plan.features.map((feature, idx) => (
+                                                <li key={idx} className="flex items-start">
+                                                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                                    <span className="text-gray-700">{feature}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <button
+                                            onClick={() => setSelectedPlan(plan.id)}
+                                            className={`w-full py-3 rounded-lg font-semibold transition-all ${
+                                                selectedPlan === plan.id
+                                                    ? 'bg-blue-600 text-white shadow-lg'
+                                                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                                            }`}
+                                        >
+                                            {selectedPlan === plan.id ? 'Selected' : 'Select Plan'}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Contact Form */}
+                        {selectedPlan && (
+                            <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                                    Complete Your Purchase
+                                </h2>
+
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div>
+                                        <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                            <User className="w-4 h-4 mr-2" />
+                                            Full Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="John Doe"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                            <Mail className="w-4 h-4 mr-2" />
+                                            Email Address
+                                        </label>
+                                        <input
+                                            type="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                            <Phone className="w-4 h-4 mr-2" />
+                                            Phone Number (Optional)
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="(555) 123-4567"
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center"
+                                    >
+                                        <CreditCard className="w-5 h-5 mr-2" />
+                                        Continue to Payment
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+                    </div>
+
+                    <LegalResources />
+                </div>
+            );
+        }
+
+        // Analysis Page
+        function AnalysisPage() {
+            const [email, setEmail] = useState('');
+            const [files, setFiles] = useState([]);
+
+            const handleFileChange = (e) => {
+                setFiles(Array.from(e.target.files));
+            };
+
+            const handleAnalyze = () => {
+                alert('Demo Mode: In production, this would:\n\n1. Verify your payment/credits\n2. Upload documents to secure server\n3. Process with Claude AI\n4. Generate PDF compliance report\n5. Download automatically\n\nTo activate: Follow setup instructions in the deployment guide.');
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-12">
+                            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                                AI Compliance Review
+                            </h1>
+                            <p className="text-xl text-gray-600">
+                                Upload your case documents for automated analysis
+                            </p>
+                        </div>
+
+                        {/* Email Input */}
+                        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Your Email Address
+                            </label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="your.email@example.com"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        {/* File Upload */}
+                        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Upload Documents</h2>
+                            
+                            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors">
+                                <input
+                                    type="file"
+                                    multiple
+                                    onChange={handleFileChange}
+                                    accept=".pdf,.doc,.docx,.txt"
+                                    className="hidden"
+                                    id="file-upload"
+                                />
+                                <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
+                                    <Upload className="w-12 h-12 text-gray-400 mb-4" />
+                                    <p className="text-lg font-semibold text-gray-700 mb-2">
+                                        Click to upload or drag and drop
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        PDF, DOC, DOCX, or TXT files
+                                    </p>
+                                </label>
+                            </div>
+
+                            {files.length > 0 && (
+                                <div className="mt-6">
+                                    <h3 className="font-semibold text-gray-900 mb-3">
+                                        Selected Files ({files.length})
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {files.map((file, idx) => (
+                                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                                <div className="flex items-center">
+                                                    <FileText className="w-5 h-5 text-blue-600 mr-3" />
+                                                    <span className="text-gray-700">{file.name}</span>
+                                                </div>
+                                                <span className="text-sm text-gray-500">
+                                                    {(file.size / 1024).toFixed(1)} KB
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Features Info */}
+                        <div className="bg-blue-50 rounded-2xl p-8 mb-8">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">What You'll Get</h3>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
+                                    <div>
+                                        <p className="font-semibold text-gray-900">Timeline Extraction</p>
+                                        <p className="text-sm text-gray-600">Chronological analysis of all events</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
+                                    <div>
+                                        <p className="font-semibold text-gray-900">Violation Identification</p>
+                                        <p className="text-sm text-gray-600">CYFSA and procedural violations</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
+                                    <div>
+                                        <p className="font-semibold text-gray-900">Worker Mistakes</p>
+                                        <p className="text-sm text-gray-600">Documented procedural errors</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
+                                    <div>
+                                        <p className="font-semibold text-gray-900">PDF Report</p>
+                                        <p className="text-sm text-gray-600">Professional compliance review</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Analyze Button */}
+                        <button
+                            onClick={handleAnalyze}
+                            disabled={!email || files.length === 0}
+                            className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center shadow-lg"
+                        >
+                            <Download className="w-5 h-5 mr-2" />
+                            Generate Compliance Review
+                        </button>
+
+                        <p className="text-center text-sm text-gray-500 mt-6">
+                            This AI analysis is for informational purposes only and does not constitute legal advice.
+                        </p>
+                    </div>
+
+                    <LegalResources />
+                </div>
+            );
+        }
+
+        // About Page
+        function AboutPage() {
+            return (
+                <div className="min-h-screen bg-white py-12 px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-8">About Ontario's Rescue Guide</h1>
+                        
+                        <div className="prose prose-lg max-w-none">
+                            <p className="text-xl text-gray-600 mb-6">
+                                We help Ontario parents navigate the complex child protection system with AI-powered legal analysis.
+                            </p>
+
+                            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Our Mission</h2>
+                            <p className="text-gray-700 mb-6">
+                                To empower parents with the knowledge and tools they need to defend their rights and protect their families 
+                                by providing accessible, affordable, and accurate legal analysis.
+                            </p>
+
+                            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">How It Works</h2>
+                            <ol className="list-decimal list-inside space-y-4 text-gray-700 mb-6">
+                                <li>Upload your case documents (court orders, CAS reports, correspondence)</li>
+                                <li>Our AI analyzes them against Ontario's CYFSA and Family Law Rules</li>
+                                <li>Receive a detailed report identifying violations and procedural errors</li>
+                                <li>Use the findings to strengthen your legal position</li>
+                            </ol>
+
+                            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Why Choose Us</h2>
+                            <div className="grid md:grid-cols-2 gap-6 mb-6">
+                                <div className="bg-blue-50 p-6 rounded-lg">
+                                    <h3 className="font-bold text-gray-900 mb-2">Affordable</h3>
+                                    <p className="text-gray-700">
+                                        Starting at just $49.99 for a comprehensive analysis - a fraction of legal fees
+                                    </p>
+                                </div>
+                                <div className="bg-blue-50 p-6 rounded-lg">
+                                    <h3 className="font-bold text-gray-900 mb-2">Fast</h3>
+                                    <p className="text-gray-700">
+                                        Get your detailed compliance report in minutes, not weeks
+                                    </p>
+                                </div>
+                                <div className="bg-blue-50 p-6 rounded-lg">
+                                    <h3 className="font-bold text-gray-900 mb-2">Accurate</h3>
+                                    <p className="text-gray-700">
+                                        Powered by Claude AI, trained on Ontario family law and CYFSA regulations
+                                    </p>
+                                </div>
+                                <div className="bg-blue-50 p-6 rounded-lg">
+                                    <h3 className="font-bold text-gray-900 mb-2">Comprehensive</h3>
+                                    <p className="text-gray-700">
+                                        Timeline extraction, violation identification, and actionable recommendations
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mt-8">
+                                <p className="text-sm text-gray-800">
+                                    <strong>Disclaimer:</strong> This service provides informational analysis only and does not constitute 
+                                    legal advice. For specific legal guidance, please consult with a qualified attorney.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <LegalResources />
+                </div>
+            );
+        }
+
+        // Legal Resources Component
+        function LegalResources() {
+            const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+            const [selectedTier, setSelectedTier] = useState(null);
+            const [formData, setFormData] = useState({
+                firmName: '',
+                lawyerName: '',
+                email: '',
+                phone: '',
+                address: '',
+                city: '',
+                practiceNumber: '',
+                lawSociety: 'Law Society of Ontario',
+                specialties: [],
+                yearsExperience: '',
+                consultationFee: '',
+                languages: '',
+                website: '',
+                bio: ''
+            });
+
+            const advertisingTiers = [
+                {
+                    id: 'basic',
+                    name: 'Basic Listing',
+                    price: 99,
+                    period: '/month',
+                    features: [
+                        'Firm name',
+                        'Phone number',
+                        'City location',
+                        'Practice area tag',
+                        'Listed with other basic listings'
+                    ],
+                    maxInfo: 'Limited',
+                    visibility: 'Standard'
+                },
+                {
+                    id: 'featured',
+                    name: 'Featured Listing',
+                    price: 249,
+                    period: '/month',
+                    popular: true,
+                    features: [
+                        'Everything in Basic',
+                        'Full address & contact details',
+                        'Law Society practice number',
+                        'Multiple specialty areas',
+                        'Years of experience',
+                        'Languages spoken',
+                        'Consultation fee info',
+                        'Highlighted placement',
+                        'Logo/photo included'
+                    ],
+                    maxInfo: 'Comprehensive',
+                    visibility: 'Enhanced'
+                },
+                {
+                    id: 'premium',
+                    name: 'Premium Spotlight',
+                    price: 499,
+                    period: '/month',
+                    features: [
+                        'Everything in Featured',
+                        'Top placement in all listings',
+                        'Full bio (up to 200 words)',
+                        'Website link',
+                        'Email contact form',
+                        'Client testimonial section',
+                        'Case success highlights',
+                        'Priority support',
+                        'Featured on homepage rotation',
+                        'Social media integration'
+                    ],
+                    maxInfo: 'Maximum',
+                    visibility: 'Premium Priority'
+                }
+            ];
+
+            const specialtyOptions = [
+                'Child Protection Law',
+                'CYFSA Appeals',
+                'Family Defense',
+                'Custody & Access',
+                'Child Welfare Cases',
+                'Emergency Protection Orders',
+                'Apprehension Defense',
+                'Crown Ward Applications',
+                'Reunification Services'
+            ];
+
+            const handleSpecialtyToggle = (specialty) => {
+                setFormData(prev => ({
+                    ...prev,
+                    specialties: prev.specialties.includes(specialty)
+                        ? prev.specialties.filter(s => s !== specialty)
+                        : [...prev.specialties, specialty]
+                }));
+            };
+
+            const handleSubmitRegistration = (e) => {
+                e.preventDefault();
+                const reference = 'LAW-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                alert(`Registration Submitted!\n\nReference: ${reference}\n\nYou will receive:\n1. Verification email within 24 hours\n2. Practice number confirmation\n3. E-transfer instructions to mr.pelkie@gmail.com\n4. Listing goes live upon payment\n\nThank you for joining Ontario's Rescue Guide for Parents!`);
+                setShowRegistrationForm(false);
+                setFormData({
+                    firmName: '', lawyerName: '', email: '', phone: '', address: '',
+                    city: '', practiceNumber: '', lawSociety: 'Law Society of Ontario',
+                    specialties: [], yearsExperience: '', consultationFee: '',
+                    languages: '', website: '', bio: ''
+                });
+            };
+
+            const legalAidOffices = [
+                { city: 'Toronto', phone: '1-800-668-8258', address: '40 Dundas St W' },
+                { city: 'Ottawa', phone: '1-800-267-8860', address: '2 Rideau St' },
+                { city: 'Mississauga', phone: '1-800-668-8258', address: '77 City Centre Dr' },
+                { city: 'Hamilton', phone: '1-866-682-7867', address: '119 King St W' },
+                { city: 'London', phone: '1-800-265-0451', address: '251 Dundas St' },
+                { city: 'Windsor', phone: '1-800-265-0451', address: '500 Riverside Dr W' }
+            ];
+
+            if (showRegistrationForm) {
+                return (
+                    <div className="bg-gray-50 py-16 px-4">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-white rounded-2xl shadow-xl p-8">
+                                <div className="mb-8">
+                                    <button
+                                        onClick={() => setShowRegistrationForm(false)}
+                                        className="text-blue-600 hover:text-blue-800 font-semibold mb-4 flex items-center"
+                                    >
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                        Back to Pricing
+                                    </button>
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                                        Lawyer Registration Form
+                                    </h2>
+                                    <p className="text-gray-600">
+                                        Selected: <span className="font-semibold text-blue-600">
+                                            {advertisingTiers.find(t => t.id === selectedTier)?.name} - 
+                                            ${advertisingTiers.find(t => t.id === selectedTier)?.price}/month
+                                        </span>
+                                    </p>
+                                </div>
+
+                                <form onSubmit={handleSubmitRegistration} className="space-y-6">
+                                    {/* Basic Information */}
+                                    <div className="border-b border-gray-200 pb-6">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Basic Information</h3>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Law Firm Name *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    value={formData.firmName}
+                                                    onChange={(e) => setFormData({...formData, firmName: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="Smith & Associates Law"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Lawyer Name *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    value={formData.lawyerName}
+                                                    onChange={(e) => setFormData({...formData, lawyerName: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="John Smith"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Email Address *
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    value={formData.email}
+                                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="contact@lawfirm.com"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Phone Number *
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    required
+                                                    value={formData.phone}
+                                                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="(416) 555-1234"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Location */}
+                                    <div className="border-b border-gray-200 pb-6">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Location</h3>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    City *
+                                                </label>
+                                                <select
+                                                    required
+                                                    value={formData.city}
+                                                    onChange={(e) => setFormData({...formData, city: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                >
+                                                    <option value="">Select City</option>
+                                                    <option value="Toronto">Toronto</option>
+                                                    <option value="Ottawa">Ottawa</option>
+                                                    <option value="Mississauga">Mississauga</option>
+                                                    <option value="Hamilton">Hamilton</option>
+                                                    <option value="London">London</option>
+                                                    <option value="Windsor">Windsor</option>
+                                                    <option value="Kingston">Kingston</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Full Address {selectedTier !== 'basic' && '*'}
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required={selectedTier !== 'basic'}
+                                                    value={formData.address}
+                                                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="123 Main St, Suite 400"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Credentials */}
+                                    <div className="border-b border-gray-200 pb-6">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Professional Credentials</h3>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Law Society *
+                                                </label>
+                                                <select
+                                                    required
+                                                    value={formData.lawSociety}
+                                                    onChange={(e) => setFormData({...formData, lawSociety: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                >
+                                                    <option value="Law Society of Ontario">Law Society of Ontario</option>
+                                                    <option value="Other">Other Province/Territory</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Practice Number *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    value={formData.practiceNumber}
+                                                    onChange={(e) => setFormData({...formData, practiceNumber: e.target.value})}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="12345A"
+                                                />
+                                            </div>
+                                            {selectedTier !== 'basic' && (
+                                                <>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                            Years of Experience
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            value={formData.yearsExperience}
+                                                            onChange={(e) => setFormData({...formData, yearsExperience: e.target.value})}
+                                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                            placeholder="10"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                            Languages Spoken
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={formData.languages}
+                                                            onChange={(e) => setFormData({...formData, languages: e.target.value})}
+                                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                            placeholder="English, French, Spanish"
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Specialties */}
+                                    <div className="border-b border-gray-200 pb-6">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Practice Areas *</h3>
+                                        <div className="grid md:grid-cols-3 gap-3">
+                                            {specialtyOptions.map(specialty => (
+                                                <label key={specialty} className="flex items-center space-x-2 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.specialties.includes(specialty)}
+                                                        onChange={() => handleSpecialtyToggle(specialty)}
+                                                        className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-sm text-gray-700">{specialty}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Additional Information for Featured/Premium */}
+                                    {selectedTier !== 'basic' && (
+                                        <div className="border-b border-gray-200 pb-6">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-4">Additional Information</h3>
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Initial Consultation Fee
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.consultationFee}
+                                                        onChange={(e) => setFormData({...formData, consultationFee: e.target.value})}
+                                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                        placeholder="Free, $150, etc."
+                                                    />
+                                                </div>
+                                                {selectedTier === 'premium' && (
+                                                    <>
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                                Website URL
+                                                            </label>
+                                                            <input
+                                                                type="url"
+                                                                value={formData.website}
+                                                                onChange={(e) => setFormData({...formData, website: e.target.value})}
+                                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                placeholder="https://www.yourfirm.com"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                                Professional Bio (Max 200 words)
+                                                            </label>
+                                                            <textarea
+                                                                value={formData.bio}
+                                                                onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                                                                rows="6"
+                                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                placeholder="Tell potential clients about your experience, approach, and what makes your practice unique..."
+                                                            ></textarea>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Verification Notice */}
+                                    <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                                        <div className="flex items-start">
+                                            <AlertCircle className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                                            <div className="text-sm text-blue-900">
+                                                <p className="font-semibold mb-1">Verification Process:</p>
+                                                <ul className="list-disc list-inside space-y-1 ml-2">
+                                                    <li>We verify your Law Society practice number</li>
+                                                    <li>E-transfer payment instructions sent within 24 hours</li>
+                                                    <li>Payment to mr.pelkie@gmail.com</li>
+                                                    <li>Listing goes live within 48 hours of payment</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-lg"
+                                    >
+                                        Submit Registration
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="bg-gray-50 py-16 px-4">
+                    <div className="max-w-7xl mx-auto">
+                        {/* Disclaimer */}
+                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-12 rounded-r-lg">
+                            <div className="flex items-start">
+                                <AlertCircle className="w-6 h-6 text-yellow-600 mr-3 mt-1 flex-shrink-0" />
+                                <div>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">Important Legal Disclaimer</h3>
+                                    <p className="text-gray-800 mb-2">
+                                        <strong>This service provides informational analysis only and does NOT constitute legal advice.</strong>
+                                    </p>
+                                    <p className="text-gray-800">
+                                        For legal representation, consult with Legal Aid Ontario (if you qualify) or a private family law lawyer 
+                                        specializing in child protection cases.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Lawyer Advertising Section */}
+                        <div className="mb-16">
+                            <div className="text-center mb-12">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-4">For Family Law Lawyers</h2>
+                                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                    Connect with Ontario parents who need your expertise. Choose the advertising tier that works for your practice.
+                                </p>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-8 mb-12">
+                                {advertisingTiers.map(tier => (
+                                    <div
+                                        key={tier.id}
+                                        className={`relative bg-white rounded-2xl shadow-xl p-8 ${
+                                            tier.popular ? 'ring-4 ring-blue-500 scale-105' : ''
+                                        }`}
+                                    >
+                                        {tier.popular && (
+                                            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                                                MOST POPULAR
+                                            </div>
+                                        )}
+                                        
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
+                                        <div className="mb-6">
+                                            <span className="text-4xl font-bold text-gray-900">${tier.price}</span>
+                                            <span className="text-gray-600">{tier.period}</span>
+                                        </div>
+
+                                        <div className="mb-6 space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-600">Information:</span>
+                                                <span className="font-semibold text-gray-900">{tier.maxInfo}</span>
+                                            </div>
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-600">Visibility:</span>
+                                                <span className="font-semibold text-gray-900">{tier.visibility}</span>
+                                            </div>
+                                        </div>
+
+                                        <ul className="space-y-3 mb-8">
+                                            {tier.features.map((feature, idx) => (
+                                                <li key={idx} className="flex items-start text-sm">
+                                                    <CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                                                    <span className="text-gray-700">{feature}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <button
+                                            onClick={() => {
+                                                setSelectedTier(tier.id);
+                                                setShowRegistrationForm(true);
+                                            }}
+                                            className={`w-full py-3 rounded-lg font-semibold transition-all ${
+                                                tier.popular
+                                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                                            }`}
+                                        >
+                                            Register Now
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="bg-blue-600 text-white rounded-xl p-8 text-center">
+                                <h3 className="text-2xl font-bold mb-3">Reach Parents When They Need You Most</h3>
+                                <p className="text-blue-100 max-w-2xl mx-auto mb-6">
+                                    Our users are actively seeking legal representation for child protection cases. 
+                                    Get verified, listed, and start receiving inquiries within 48 hours.
+                                </p>
+                                <div className="flex flex-wrap justify-center gap-4 text-sm">
+                                    <div className="flex items-center">
+                                        <CheckCircle className="w-5 h-5 mr-2" />
+                                        <span>Law Society Verified</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <CheckCircle className="w-5 h-5 mr-2" />
+                                        <span>Targeted Audience</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <CheckCircle className="w-5 h-5 mr-2" />
+                                        <span>Monthly Billing</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <CheckCircle className="w-5 h-5 mr-2" />
+                                        <span>Cancel Anytime</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Legal Aid Ontario Reference */}
+                        <div className="mb-8">
+                            <div className="flex items-center justify-center mb-8">
+                                <Shield className="w-8 h-8 text-blue-600 mr-3" />
+                                <h3 className="text-2xl font-bold text-gray-900">Free Legal Aid Ontario Services</h3>
+                            </div>
+                            <div className="grid md:grid-cols-3 gap-6 mb-6">
+                                {legalAidOffices.map((office, idx) => (
+                                    <div key={idx} className="bg-white p-6 rounded-xl shadow-md">
+                                        <h4 className="text-lg font-bold text-gray-900 mb-3">{office.city}</h4>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex items-center">
+                                                <Phone className="w-4 h-4 text-blue-600 mr-2" />
+                                                <a href={`tel:${office.phone}`} className="text-blue-600 hover:text-blue-800 font-semibold">
+                                                    {office.phone}
+                                                </a>
+                                            </div>
+                                            <div className="flex items-start">
+                                                <svg className="w-4 h-4 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                </svg>
+                                                <span className="text-gray-600">{office.address}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="text-center">
+                                <a 
+                                    href="https://www.legalaid.on.ca" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold"
+                                >
+                                    Visit Legal Aid Ontario Website
+                                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Helper Components
+        function FeatureCard({ icon, title, description }) {
+            return (
+                <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div className="mb-4">{icon}</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+                    <p className="text-gray-600">{description}</p>
+                </div>
+            );
+        }
+
+        function StatCard({ number, label }) {
+            return (
+                <div className="bg-white p-8 rounded-xl shadow-lg">
+                    <div className="text-4xl font-bold text-blue-600 mb-2">{number}</div>
+                    <div className="text-gray-600 font-medium">{label}</div>
+                </div>
+            );
+        }
+
+        function Footer({ setPage }) {
+            return (
+                <footer className="bg-gray-900 text-white py-12">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div>
+                                <h3 className="text-lg font-bold mb-4">Ontario's Rescue Guide</h3>
+                                <p className="text-gray-400">
+                                    AI-powered legal analysis for Ontario parents navigating the child protection system.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+                                <ul className="space-y-2">
+                                    <li>
+                                        <button onClick={() => setPage('home')} className="text-gray-400 hover:text-white">
+                                            Home
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => setPage('about')} className="text-gray-400 hover:text-white">
+                                            About
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => setPage('pricing')} className="text-gray-400 hover:text-white">
+                                            Pricing
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold mb-4">Contact</h3>
+                                <p className="text-gray-400">
+                                    Payments: mr.pelkie@gmail.com
+                                </p>
+                            </div>
+                        </div>
+                        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                            <p>&copy; 2025 Ontario's Rescue Guide for Parents. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
+            );
+        }
+
+        // Render App
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
